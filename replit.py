@@ -29,7 +29,8 @@ collection = db["users"]
 options = uc.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--lang=en')
-driver = uc.Chrome(options=options)
+driver = uc.Chrome(use_subprocess=True, options=options) 
+#driver = uc.Chrome(options=options)
 
 driver.implicitly_wait(10)
             
