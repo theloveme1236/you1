@@ -23,6 +23,8 @@ import base64
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoSuchWindowException
 import sys
+import random
+from random import randint
 
 cluster = MongoClient('mongodb+srv://theloveme1238:zx5LtPcgLpcpIh7D@cluster0.pzuhxov.mongodb.net/?retryWrites=true&w=majority')
 db = cluster["my_database"]
@@ -326,20 +328,19 @@ def Subscribe():
             driver.maximize_window()
             driver.implicitly_wait(15)
             #driver.execute_script("window.scrollTo(0, document.body.scrollHeight/1);")
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.find_element(By.CSS_SELECTOR, "a[class^='cursor earn_pages_button profile_view_img']").click()
             driver.switch_to.window(driver.window_handles[1])
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.find_element(By.ID, 'subscribe-button').click()            
             
             
             driver.save_screenshot('sub_{}.png'.format(s))
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.find_element(By.CSS_SELECTOR, '[alt="Click On The Button To Confirm Interaction!"]').click()
-            time.sleep(5)
             email_to_find = email
             user_data = collection.find_one({"email": email_to_find})
             if user_data:
@@ -405,18 +406,17 @@ def like():
             driver.implicitly_wait(15)
             #driver.execute_script("window.scrollTo(0, document.body.scrollHeight/1);")
 
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.find_element(By.CSS_SELECTOR, "a[class^='cursor earn_pages_button profile_view_img']").click()
             driver.switch_to.window(driver.window_handles[1])
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.find_element(By.ID, 'segmented-like-button').click()
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.save_screenshot('like_{}.png'.format(s))
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
-            time.sleep(5)
+            time.sleep(random.randrange(3, 7))
             driver.find_element(By.CSS_SELECTOR, '[alt="Click On The Button To Confirm Interaction!"]').click()
-            time.sleep(5)
             email_to_find = email
             user_data = collection.find_one({"email": email_to_find})
             
