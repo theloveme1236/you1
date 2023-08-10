@@ -220,7 +220,7 @@ for cookies_totel in os.listdir(os.getcwd()):
         cookis_like()
 def limeit_all_ike4like():
     global driver
-    if Subscribe_erro_stop_time == 'stop' and like_erro_stop_time == 'stop':
+    if like_erro_stop_time == 'stop':#Subscribe_erro_stop_time == 'stop' and 
         
         email_to_find = email
         user_data = collection.find_one({"email": email_to_find})
@@ -243,10 +243,12 @@ def check_driver_open():
 def no_Window_driver():
     global driver
     print('NoSuchWindowException_stop')
-    options = uc.ChromeOptions()
+    options = webdriver.ChromeOptions()
     options.add_argument('--headless')
+    options.add_argument("--no-sandbox")
+    options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--lang=en')
-    driver = uc.Chrome(options=options)
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),options=options)
     driver.implicitly_wait(10)
     driver.maximize_window()
     driver.get("https://www.like4like.org/#social-media-platform-list")
@@ -379,11 +381,11 @@ def like_erro():
     try:
         if like_erro_stop_time == 'stop':
             print('Subscribe__stop_time_NoSuchElementException')
-            Subscribe()
+            #Subscribe()
         con_like+=1
         if con_like == 5:
             print('con_like')
-            Subscribe()
+            #Subscribe()
         driver.switch_to.window(driver.window_handles[0])
         driver.get("https://www.like4like.org/earn-credits.php?feature=youtube")
         time.sleep(10)
@@ -445,4 +447,4 @@ def like():
             like_erro()
 
 
-Subscribe()
+like()
