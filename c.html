@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opening Multiple Links in Same Page</title>
+<style>
+  .frame-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .frame-container > div {
+    width: calc(33.33% - 10px); /* عرض 33.33% لكل عنصر مع فراغ بينهم */
+  }
+
+  iframe {
+    width: 100%;
+    height: 200px;
+  }
+</style>
+</head>
+<body>
+
+<!-- العنصر iframe لعرض المحتوى -->
+<div class="frame-container" id="frames-container"></div>
+
+<script>
+window.onload = function() {
+  var firebaseio_link = 'https://nour-c6e00-default-rtdb.firebaseio.com/control_run/link.json';
+  var openedLinks = {}; // قائمة لتخزين الروابط التي تم فتحها
+
+  // تنفيذ الفحص كل 10 ثواني
+  setInterval(function() {
+    fetchAndOpenLinks();
+  }, 10000);
+
+  // دالة لاسترجاع البيانات من قاعدة البيانات وفتح الروابط التي لم تفتح بعد
+  function fetchAndOpenLinks() {
+    fetch(firebaseio_link)
+      .then(response => response.json())
+      .then(data => {
+        for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+            var shouldBeOpened = data[key].true === 'false' && !openedLinks[key];
+            if (shouldBeOpened) {
+              openLink(key, data[key].link); // فتح الرابط
+              openedLinks[key] = true; // تحديث قائمة الروابط المفتوحة
+              updateLinkStatus(key); // تحديث حالة الرابط في قاعدة البيانات
+            }
+          }
+        }
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }
+
+  // دالة لفتح الرابط
+  function openLink(key, url) {
+    var newFrame = document.createElement('iframe');
+    newFrame.setAttribute('src', url);
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'حذف';
+    deleteButton.onclick = function() {
+      removeFrame(newFrame);
+    };
+    var container = document.createElement('div');
+    container.appendChild(newFrame);
+    container.appendChild(deleteButton);
+    document.getElementById("frames-container").appendChild(container);
+  }
+
+  // دالة لتحديث حالة الرابط في قاعدة البيانات إلى true
+  function updateLinkStatus(key) {
+    var updatedData = { true: 'true' };
+    fetch(`${firebaseio_link}/${key}.json`, {
+      method: 'PATCH',
+      body: JSON.stringify(updatedData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Link status updated successfully:', data);
+    })
+    .catch(error => console.error('Error updating link status:', error));
+  }
+
+  // دالة لحذف العنصر
+  function removeFrame(frame) {
+    frame.parentNode.remove();
+  }
+}
+</script>
+
+</body>
+</html>
